@@ -1,4 +1,4 @@
-import prisma from "../../../lib/prisma";
+import dynamoose from "dynamoose";
 
 // DELETE /api/post/:id
 export default async function handle(req, res) {

@@ -1,19 +1,19 @@
-import { NextApiHandler } from 'next';
+import { NextApiHandler } from "next";
 import NextAuth from "next-auth";
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import GitHubProvider from 'next-auth/providers/github'
-import prisma from '../../../lib/prisma';
+import AzureADB2CProvider from "next-auth/providers/azure-ad-b2c";
 
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
 export default authHandler;
 
 const options = {
   providers: [
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
+    AzureADB2CProvider({
+      tenantId: process.env.AZURE_AD_B2C_TENANT_NAME,
+      clientId: process.env.AZURE_AD_B2C_CLIENT_ID,
+      clientSecret: process.env.AZURE_AD_B2C_CLIENT_SECRET,
+      primaryUserFlow: process.env.AZURE_AD_B2C_PRIMARY_USER_FLOW,
+      authorization: { params: { scope: "offline_access openid" } },
     }),
   ],
-  adapter: PrismaAdapter(prisma),
   secret: process.env.SECRET,
 };

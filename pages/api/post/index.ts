@@ -1,5 +1,7 @@
 import { getSession } from "next-auth/react";
 import prisma from "../../../lib/prisma";
+import dynamoose from "dynamoose";
+import { UserSchema, PostSchema } from "../../../lib/schema";
 
 // POST /api/post
 // Required fields in body: title
@@ -8,6 +10,10 @@ export default async function handle(req, res) {
   const { title, content } = req.body;
 
   const session = await getSession({ req });
+
+  const User = dynamoose.model("User", UserSchema);
+  let userinstance = await User.query("email").eq(session?.user?.email);
+
   const result = await prisma.post.create({
     data: {
       title: title,
